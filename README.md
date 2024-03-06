@@ -1,6 +1,8 @@
 # TWAS_ASSOC
 Implement the eQTL analysis (first step of TWAS) in Python.
 
+![Gene expression](https://oicr.on.ca/how-natural-selection-influences-gene-expression-and-can-protect-us-from-disease/)
+
 ## Introduction
   `TWAS_ASSOC` is developed to employ FUSION, an advanced suite of tools for performing large-scale Transcriptome-Wide and Regulome-Wide Association Studies (TWAS and RWAS). 
  
