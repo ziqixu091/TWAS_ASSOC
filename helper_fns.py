@@ -6,9 +6,6 @@ import sys
 from typing import List, Tuple, Dict, Any, Optional
 import pickle
 
-os.chdir('/Users/xbh0403/Desktop/TWAS_ASSOC')
-
-
 from pyplink import PyPlink
 
 def load_data():
@@ -26,7 +23,22 @@ def load_data():
 
     return EUR_ge_regressed, YRI_ge_regressed, EUR_protein_genes, YRI_protein_genes
 
-def find_snps_in_gene(chr_num: int, start: int, end: int, ancsetry: str) -> pd.DataFrame:
+def load_custom_data(protein_gene_path: str = "./project_data/GEUVADIS_YRI_protein_genes.tsv.gz", 
+                     ge_regressed_path: str = "./project_data/GEUVADIS_YRI_ge_regressed.tsv.gz",
+                     chr_num: int = 1):
+    ge_regressed = pd.read_csv(ge_regressed_path, sep="\t", index_col=0, compression="gzip")
+    protein_genes = pd.read_csv(protein_gene_path, sep="\t", index_col=0, compression="gzip")
+    protein_genes["chr"] = protein_genes.index
+    protein_genes.reset_index(drop=True, inplace=True)
+    protein_genes_chr = protein_genes[protein_genes["chr"] == chr_num]
+    genes_chr = protein_genes_chr["gene_id"].tolist()
+    # Keep genes_chr columns in ge_regressed
+    ge_regressed_chr = ge_regressed[genes_chr]
+    return ge_regressed_chr, protein_genes_chr
+    
+
+def find_snps_in_gene(chr_num: int, start: int, end: int, 
+                      ancsetry: str, bfile_path: str | None = None) -> pd.DataFrame:
     """
     Find SNPs within a specified genomic region.
 
@@ -34,13 +46,17 @@ def find_snps_in_gene(chr_num: int, start: int, end: int, ancsetry: str) -> pd.D
     chr_num (int): Chromosome number.
     start (int): Start position of the genomic region.
     end (int): End position of the genomic region.
-    bim (pd.DataFrame): DataFrame containing SNP information.
+    ancsetry (str): Ancestry of the individual.
+    bfile_path (str | None): Path to the BIM file.
 
     Returns:
     pd.DataFrame: DataFrame containing SNPs within the specified genomic region.
     
     """
-    with PyPlink("./project_data/geno/"+ancsetry+"/GEUVADIS_"+ancsetry+"_chr"+str(chr_num)) as bed:
+    if bfile_path == None:
+        bfile_path = "./project_data/geno/"+ancsetry+"/GEUVADIS_"+ancsetry+"_chr"+str(chr_num)
+
+    with PyPlink(bfile_path) as bed:
         # Getting the BIM and FAM
         bim = bed.get_bim()
         bim["snp"] = bim.index
@@ -48,7 +64,10 @@ def find_snps_in_gene(chr_num: int, start: int, end: int, ancsetry: str) -> pd.D
         bim = bim[["snp", "chrom", "pos", "cm", "a1", "a2"]]
     return bim[(bim["pos"] >= start) & (bim["pos"] <= end)]
 
-def process_geno(ancsetry: str, chr_num: int, snps: List[str], start: int, gene_id: str, save_result: bool = False) -> np.ndarray:
+def process_geno(ancsetry: str, chr_num: int, snps: List[str], 
+                 start: int, gene_id: str, 
+                 bfile_path: str|None = None, 
+                 save_result: bool = False) -> np.ndarray:
     """
     Process the genotype data.
 
@@ -57,6 +76,8 @@ def process_geno(ancsetry: str, chr_num: int, snps: List[str], start: int, gene_
     chr_num (int): Chromosome number.
     individual (str | None): Individual ID.
     snps (List[str]): List of SNPs.
+    bfile_path (str | None): Path to the BIM file.
+    save_result (bool): Whether to save the results.
 
     Returns:
     pd.DataFrame: Processed genotype data.
@@ -64,7 +85,10 @@ def process_geno(ancsetry: str, chr_num: int, snps: List[str], start: int, gene_
     if len(snps) == 0:
         raise ValueError("No SNPs provided.")
     
-    with PyPlink("./project_data/geno/"+ancsetry+"/GEUVADIS_"+ancsetry+"_chr"+str(chr_num)) as bed:
+    if bfile_path == None:
+        bfile_path = "./project_data/geno/"+ancsetry+"/GEUVADIS_"+ancsetry+"_chr"+str(chr_num)
+
+    with PyPlink(bfile_path) as bed:
         # Getting the BIM and FAM
         bim = bed.get_bim()
         bim["snp"] = bim.index
@@ -128,7 +152,8 @@ def get_y(gene_id: str, iids: List[str], y_full_df: pd.DataFrame, save_y: bool =
         np.save("./project_data/processed_Xy/y/"+gene_id+"_y.npy", y)
     return y
 
-def process_one_gene(gene_id: str, protein_genes: pd.DataFrame, ancsetry: str, y_full_df: pd.DataFrame) -> np.ndarray:
+def process_one_gene(gene_id: str, protein_genes: pd.DataFrame, ancsetry: str,
+                     y_full_df: pd.DataFrame, bfile_path: str | None =  None) -> np.ndarray:
     gene = protein_genes[protein_genes["gene_id"] == gene_id]
     assert gene.shape[0] == 1
     chr_num = gene["chr"].values[0]
@@ -140,6 +165,6 @@ def process_one_gene(gene_id: str, protein_genes: pd.DataFrame, ancsetry: str, y
     snps = find_snps_in_gene(chr_num, start, end, ancsetry)
     snps_name = snps["snp"].tolist()
     # print("Number of SNPs: ", len(snps_name))
-    processed_geno, X = process_geno(ancsetry, chr_num, snps_name, start, gene_id, save_result=False)
+    processed_geno, X = process_geno(ancsetry, chr_num, snps_name, start, gene_id, bfile_path, save_result=False)
     y = get_y(gene_id, processed_geno["iids_filtered"], y_full_df, save_y=False)
     return processed_geno, X, y

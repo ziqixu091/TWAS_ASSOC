@@ -1,0 +1,1 @@
+{"protein_gene_path": "./project_data/GEUVADIS_YRI_protein_genes.tsv.gz", "gene_exp_regressed_path": "./project_data/GEUVADIS_YRI_ge_regressed.tsv.gz", "model": ["ElasticNet", "Lasso", "Ridge", "Marginal"]}
