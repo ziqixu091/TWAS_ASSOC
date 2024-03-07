@@ -28,6 +28,7 @@ The demo data is hosted on Google Drive. To download it, please run the followin
 ```
 gdown --folder https://drive.google.com/drive/folders/1OS33asqrhRLkL3QM2qLHHzCN3G30cbaG?usp=drive_link
 ```
+If the command works, the data will be downloaded to the `project_data` folder in the root directory of the project. Otherwise, please download the data from [this link](https://drive.google.com/drive/folders/1OS33asqrhRLkL3QM2qLHHzCN3G30cbaG). All the file should be placed in the `project_data` folder in the root directory of the project.
 
 ## Analysis and Outputs
 - Data: The Geuvadis data is not provided in this repository; however, it could be easily downloaded on this [page](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-GEUV-1?query=GEUVADIS). The preprocessing of data involves using [PLINK](https://www.cog-genomics.org/plink/) tools where the detailed process is described in the `preprocess.txt` file. 
