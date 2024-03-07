@@ -41,20 +41,20 @@ if __name__ == "__main__":
         print("\nRunning ElasticNet on {} genes and {} samples".format(protein_genes_chr.shape[0], ge_regressed_chr.shape[0]))
         results = ElasticNet_all_genes(protein_genes_chr, ge_regressed_chr, ancestry, bfile=bfile_path)
         if save_model:
-            save_results(results, ancestry, model)
+            save_results(results, ancestry, "ElasticNet")
     if "LASSO" in model:
         print("\nRunning LASSO on {} genes and {} samples".format(protein_genes_chr.shape[0], ge_regressed_chr.shape[0]))
         results = LASSO_all_genes(protein_genes_chr, ge_regressed_chr, ancestry, bfile=bfile_path)
         if save_model:
-            save_results(results, ancestry, model)
+            save_results(results, ancestry, "LASSO")
     if "Ridge" in model:
         print("\nRunning Ridge on {} genes and {} samples".format(protein_genes_chr.shape[0], ge_regressed_chr.shape[0]))
         results = Ridge_all_genes(protein_genes_chr, ge_regressed_chr, ancestry, bfile=bfile_path)
         if save_model:
-            save_results(results, ancestry, model)
+            save_results(results, ancestry, "Ridge")
     if "Marginal" in model:
         print("\nRunning Marginal on {} genes and {} samples".format(protein_genes_chr.shape[0], ge_regressed_chr.shape[0]))
         results = Marginal_all_genes(protein_genes_chr, ge_regressed_chr, ancestry, bfile=bfile_path)
         if save_model:
-            save_results(results, ancestry, model)
+            save_results(results, ancestry, "Marginal")
     
