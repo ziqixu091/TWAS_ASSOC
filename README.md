@@ -54,4 +54,7 @@ The software will run the models specified in the `config.json` file and output 
   
 - Analysis: We focus on 10,000 disease-important GWAS genes and for each gene, we look at the SNPs within the 1Mb cis-window. We also conduct cis-heritability estimation using [GCTA](https://yanglab.westlake.edu.cn/software/gcta/#Overview) for each gene for all the European samples. We will use the metrics of adjusted accuracy (r^2/cis-h2) to compare the performance between models. 
 
-
+## TODO Next Week
+1. Finish the implementation fo BSLMM (90% done currently).
+2. Polish the documentation and code.
+3. Implement the parameter tuning for the models. 
