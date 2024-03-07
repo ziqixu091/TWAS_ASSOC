@@ -1,1 +1,14 @@
-{"bfile_path": "./project_data/geno/YRI/GEUVADIS_YRI_chr1", "protein_gene_path": "./project_data/GEUVADIS_YRI_protein_genes.tsv.gz", "gene_exp_regressed_path": "./project_data/GEUVADIS_YRI_ge_regressed.tsv.gz", "model": ["ElasticNet", "LASSO", "Ridge", "Marginal"], "ancestry": "YRI", "num_genes": 10, "save_model": true}
+{
+    "bfile_path": "./project_data/geno/YRI/GEUVADIS_YRI_chr1",
+    "protein_gene_path": "./project_data/GEUVADIS_YRI_protein_genes.tsv.gz",
+    "gene_exp_regressed_path": "./project_data/GEUVADIS_YRI_ge_regressed.tsv.gz",
+    "model": [
+      "ElasticNet",
+      "LASSO",
+      "Ridge",
+      "Marginal"
+    ],
+    "ancestry": "YRI",
+    "num_genes": 10,
+    "save_model": true
+}
