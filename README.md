@@ -43,8 +43,13 @@ gdown --folder https://drive.google.com/drive/folders/1OS33asqrhRLkL3QM2qLHHzCN3
 | **num_genes**               | `10`                                                        | Number of genes to run the model on                   |
 | **save_model**              | `true`                                                      | Save the results of the model or not                  |
 
-  
-- Output: The software will output both the effect size of the linear regression and also the r^2 statistics in a pickle file. 
+After modifying the `config.json` file, run the following command to execute the software:
+```
+python main.py
+```
+The software will run the models specified in the `config.json` file and output the results in the `project_data/results` folder.
+
+- Output: The software will run the models specified in the `config.json` file and output the results in the `project_data/results` folder. The effect size of the linear regression and the r^2 statistics are currently saved in a pickle file. 
   
 - Analysis: We focus on 10,000 disease-important GWAS genes and for each gene, we look at the SNPs within the 1Mb cis-window. We also conduct cis-heritability estimation using GCTA for each gene for all the European samples. We will use the metrics of adjusted accuracy (r^2/cis-h2) to compare the performance between models. 
 
