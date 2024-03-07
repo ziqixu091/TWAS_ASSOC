@@ -1,0 +1,17 @@
+Data Preprocessing Steps: 
+
+1. Download genotype data in vcf file format, use plink `--make-bed` to convert vcf to bed files, split to each chromosome using `--chr`
+
+2. Download the gene expression data and covariates data 
+
+3. Download the GWAS Catalog gene meta informations on UCSC Genome Browser with the hg19 coordinate; generate +- 5kb cis-window for each gene
+
+4. For each gene, expression values were normalized across samples using an inverse normal transform.
+
+5. Standardize gene expression with mean 0 and variance 1 for each gene across individuals.
+
+6. Compute gene expression PCs using the R package prcomp
+
+7. Standardize genotype with mean 0 variance 1 for each SNP across individuals
+
+8. Regress covariates out of gene expression 
