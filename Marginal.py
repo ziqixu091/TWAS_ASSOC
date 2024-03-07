@@ -33,29 +33,34 @@ def Marginal(X, Y, beta=False, test_size=0.2, random_state=42):
     X_std = StandardScaler().fit_transform(X)
     X_train, X_test, Y_train, Y_test = train_test_split(X_std, Y, test_size=test_size, random_state=random_state)
     eff_wgt = weights_marginal(X_train, Y_train, beta)
+    # Keep only the one with the highest squared effect weight and set the rest to 0
+    eff_wgt_filtered = np.where(eff_wgt == np.max(eff_wgt), eff_wgt, 0)
     return {
         "eff_wgt": eff_wgt,
+        "eff_wgt_filtered": eff_wgt_filtered,
         # "X_train": X_train,
         # "X_test": X_test,
         # "Y_train": Y_train,
         # "Y_train_pred": np.dot(X_train, eff_wgt),
         # "Y_test": Y_test,
         # "Y_test_pred": np.dot(X_test, eff_wgt),
-        "r2_train": r2_score(Y_train, np.dot(X_train, eff_wgt)),
-        "r2_test": r2_score(Y_test, np.dot(X_test, eff_wgt))
+        "r2_train": r2_score(Y_train, np.dot(X_train, eff_wgt_filtered)),
+        "r2_test": r2_score(Y_test, np.dot(X_test, eff_wgt_filtered))
     }
 
 
 def process_gene(gene_id, protein_genes, ancsetry, y_full_df, test_size, bfile, random_state):
     try:
         processed_geno, X, Y = process_one_gene(gene_id, protein_genes, ancsetry, y_full_df, bfile)
-        return gene_id, Marginal(X, Y, test_size=test_size, random_state=random_state)
+        snps = processed_geno["snp_info"]
+        return gene_id, Marginal(X, Y, test_size=test_size, random_state=random_state), snps
     except ValueError:
         print("No snps for gene ", gene_id)
         return None
 
-def Marginal_all_genes(protein_genes, y_full_df, ancsetry, bfile, test_size=0.2, random_state=42):
+def Marginal_all_genes(protein_genes, y_full_df, ancsetry, bfile, test_size=0.2, random_state=42, save_snps=True):
     results = {}
+    snps_list = []
     gene_ids = protein_genes["gene_id"]
     pool = Pool()
     results_list = pool.starmap(process_gene, [(gene_id, protein_genes, ancsetry, y_full_df, test_size, bfile, random_state) for gene_id in gene_ids])
@@ -63,9 +68,19 @@ def Marginal_all_genes(protein_genes, y_full_df, ancsetry, bfile, test_size=0.2,
     pool.join()
     for result in results_list:
         if result is not None:
-            gene_id, result_data = result
+            gene_id, result_data, snps = result
+            snps["effect_weights"] = result_data["eff_wgt"]
+            snps_list.append(snps)
+            if save_snps:
+                os.makedirs(f"./project_data/results/effect/{ancsetry}", exist_ok=True)
+                snps.to_csv(f"./project_data/results/effect/{ancsetry}/Marginal_{gene_id}_effect_weights.csv")
             results[gene_id] = result_data
-    return results
+    
+    train_r2 = np.mean([results[gene_id]["r2_train"] for gene_id in results])
+    test_r2 = np.mean([results[gene_id]["r2_test"] for gene_id in results])
+    print(f"Average train R^2: {train_r2}, Average test R^2: {test_r2}")
+    
+    return results, snps_list
 
 
 if __name__ == "__main__":
