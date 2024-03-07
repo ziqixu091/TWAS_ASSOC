@@ -46,19 +46,19 @@ def Marginal(X, Y, beta=False, test_size=0.2, random_state=42):
     }
 
 
-def process_gene(gene_id, protein_genes, ancsetry, y_full_df, test_size, random_state):
+def process_gene(gene_id, protein_genes, ancsetry, y_full_df, test_size, bfile, random_state):
     try:
-        processed_geno, X, Y = process_one_gene(gene_id, protein_genes, ancsetry, y_full_df)
+        processed_geno, X, Y = process_one_gene(gene_id, protein_genes, ancsetry, y_full_df, bfile)
         return gene_id, Marginal(X, Y, test_size=test_size, random_state=random_state)
     except ValueError:
         print("No snps for gene ", gene_id)
         return None
 
-def Marginal_all_genes(protein_genes, y_full_df, ancsetry, test_size=0.2, random_state=42):
+def Marginal_all_genes(protein_genes, y_full_df, ancsetry, bfile, test_size=0.2, random_state=42):
     results = {}
     gene_ids = protein_genes["gene_id"]
     pool = Pool()
-    results_list = pool.starmap(process_gene, [(gene_id, protein_genes, ancsetry, y_full_df, test_size, random_state) for gene_id in gene_ids])
+    results_list = pool.starmap(process_gene, [(gene_id, protein_genes, ancsetry, y_full_df, test_size, bfile, random_state) for gene_id in gene_ids])
     pool.close()
     pool.join()
     for result in results_list:

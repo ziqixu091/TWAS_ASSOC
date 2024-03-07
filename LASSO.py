@@ -21,11 +21,11 @@ def LASSO(X, Y, alpha=0.1, test_size=0.2, random_state=42):
         "r2_test": clf.score(X_test, Y_test)
     }
 
-def LASSO_all_genes(protein_genes, y_full_df, ancsetry, alpha=0.1, test_size=0.2, random_state=42):
+def LASSO_all_genes(protein_genes, y_full_df, ancsetry, bfile=None, alpha=0.1, test_size=0.2, random_state=42):
     results = {}
     for gene_id in tqdm(protein_genes["gene_id"]):
         try:
-            processed_geno, X, Y = process_one_gene(gene_id, protein_genes, ancsetry, y_full_df)
+            processed_geno, X, Y = process_one_gene(gene_id, protein_genes, ancsetry, y_full_df, bfile)
         except ValueError:
             print("No snps for gene ", gene_id)
             continue
