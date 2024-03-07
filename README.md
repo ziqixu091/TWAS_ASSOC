@@ -43,6 +43,6 @@ We implemented the other models using Python packages. Please refer to Analysis 
   
 - Output: The software will output both the effect size of the linear regression and also the r^2 statistics.
   
-- Analysis: We focus on 10,000 disease-important GWAS genes and for each gene, we look at the SNPs within the 1Mb cis-window. We also conduct cis-heritability estimation using GCTA for each gene for all the European samples. We will use the metrics of adjusted accuracy (r^2/cis-h2) to compare the performance between models. 
+- Analysis: We focus on 10,000 disease-important GWAS genes and for each gene, we look at the SNPs within the 1Mb cis-window. We also conduct cis-heritability estimation using [GCTA](https://yanglab.westlake.edu.cn/software/gcta/#Overview) for each gene for all the European samples. We will use the metrics of adjusted accuracy (r^2/cis-h2) to compare the performance between models. 
 
 
