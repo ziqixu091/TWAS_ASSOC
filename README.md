@@ -17,7 +17,7 @@ If you are using the BSLMM model to conduct association tests, download and inst
 We implemented the other models using Python packages. Please refer to Analysis and Output for more details.
 
 ## Analysis and Outputs
-- Data: The Geuvadis data is not provided in this repository; however, it could be easily downloaded on this [page](). The preprocessing of data involves using [PLINK](https://www.cog-genomics.org/plink/) tools where the detailed process is described in the `preprocess.txt` file. 
+- Data: The Geuvadis data is not provided in this repository; however, it could be easily downloaded on this [page](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-GEUV-1?query=GEUVADIS). The preprocessing of data involves using [PLINK](https://www.cog-genomics.org/plink/) tools where the detailed process is described in the `preprocess.txt` file. 
 
 - Input: For different models, there are different input formats
   * lasso:
