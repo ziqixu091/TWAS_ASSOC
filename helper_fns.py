@@ -6,8 +6,10 @@ import sys
 from typing import List, Tuple, Dict, Any, Optional
 import pickle
 
-os.chdir('/Users/xbh0403/Desktop/TWAS_ASSOC')
-
+try:
+    os.chdir('/Users/xbh0403/Desktop/TWAS_ASSOC')
+except:
+    os.chdir('/new-stg/home/banghua/TWAS_ASSOC')
 
 from pyplink import PyPlink
 
