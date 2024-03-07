@@ -1,4 +1,3 @@
-#%%
 from helper_fns import *
 from tqdm import tqdm
 from sklearn import linear_model
@@ -12,20 +11,24 @@ def ElasticNet(X, Y, alpha=0.1, l1_ratio=0.5, test_size=0.2, random_state=42):
     clf.fit(X_train, Y_train)
     return {
         "clf": clf,
-        "X_train": X_train,
-        "X_test": X_test,
-        "Y_train": Y_train,
-        "Y_train_pred": clf.predict(X_train),
-        "Y_test": Y_test,
-        "Y_test_pred": clf.predict(X_test),
+        # "X_train": X_train,
+        # "X_test": X_test,
+        # "Y_train": Y_train,
+        # "Y_train_pred": clf.predict(X_train),
+        # "Y_test": Y_test,
+        # "Y_test_pred": clf.predict(X_test),
         "r2_train": clf.score(X_train, Y_train),
         "r2_test": clf.score(X_test, Y_test)
     }
 
-def ElasticNet_all_genes(protein_genes, y_full_df, ancsetry, alpha=0.1, l1_ratio=0.5, test_size=0.2, random_state=42):
+def ElasticNet_all_genes(protein_genes, y_full_df, ancsetry, bfile=None, alpha=0.1, l1_ratio=0.5, test_size=0.2, random_state=42):
     results = {}
     for gene_id in tqdm(protein_genes["gene_id"]):
-        processed_geno, X, Y = process_one_gene(gene_id, protein_genes, ancsetry, y_full_df)
+        try:
+            processed_geno, X, Y = process_one_gene(gene_id, protein_genes, ancsetry, y_full_df, bfile)
+        except ValueError:
+            print("No snps for gene ", gene_id)
+            continue
         results[gene_id] = ElasticNet(X, Y, alpha=alpha, l1_ratio=l1_ratio, test_size=test_size, random_state=random_state)
     return results
 
