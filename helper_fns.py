@@ -6,6 +6,7 @@ import sys
 import random
 from typing import List, Tuple, Dict, Any, Optional
 import pickle
+import random
 
 from pyplink import PyPlink
 
@@ -23,6 +24,7 @@ def load_data():
     print("Shapes of the dataframes:", EUR_ge_regressed.shape, YRI_ge_regressed.shape, EUR_protein_genes.shape, YRI_protein_genes.shape)
 
     return EUR_ge_regressed, YRI_ge_regressed, EUR_protein_genes, YRI_protein_genes
+
 
 def load_custom_data(protein_gene_path: str = "./project_data/GEUVADIS_YRI_protein_genes.tsv.gz", 
                      ge_regressed_path: str = "./project_data/GEUVADIS_YRI_ge_regressed.tsv.gz",
@@ -43,7 +45,6 @@ def load_custom_data(protein_gene_path: str = "./project_data/GEUVADIS_YRI_prote
     ge_regressed_chr = ge_regressed[genes_chr]
     
     return ge_regressed_chr, protein_genes_chr
-    
 
 def find_snps_in_gene(chr_num: int, start: int, end: int, 
                       ancsetry: str, bfile_path: str | None = None) -> pd.DataFrame:
