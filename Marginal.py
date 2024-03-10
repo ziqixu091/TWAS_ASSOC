@@ -33,16 +33,19 @@ def Marginal(X, Y, beta=False, test_size=0.2, random_state=42):
     X_std = StandardScaler().fit_transform(X)
     X_train, X_test, Y_train, Y_test = train_test_split(X_std, Y, test_size=test_size, random_state=random_state)
     eff_wgt = weights_marginal(X_train, Y_train, beta)
+    eff_wgt_max = np.where(np.abs(eff_wgt) == np.max(np.abs(eff_wgt)), eff_wgt, 0)
+    
     return {
         "eff_wgt": eff_wgt,
+        "eff_wgt_max": eff_wgt_max,
         # "X_train": X_train,
         # "X_test": X_test,
         # "Y_train": Y_train,
         # "Y_train_pred": np.dot(X_train, eff_wgt),
         # "Y_test": Y_test,
         # "Y_test_pred": np.dot(X_test, eff_wgt),
-        "r2_train": r2_score(Y_train, np.dot(X_train, eff_wgt)),
-        "r2_test": r2_score(Y_test, np.dot(X_test, eff_wgt))
+        "r2_train": r2_score(Y_train, np.dot(X_train, eff_wgt_max)),
+        "r2_test": r2_score(Y_test, np.dot(X_test, eff_wgt_max))
     }
 
 

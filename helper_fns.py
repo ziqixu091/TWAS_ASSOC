@@ -3,6 +3,7 @@ import numpy as np
 
 import os
 import sys
+import random
 from typing import List, Tuple, Dict, Any, Optional
 import pickle
 
@@ -25,15 +26,22 @@ def load_data():
 
 def load_custom_data(protein_gene_path: str = "./project_data/GEUVADIS_YRI_protein_genes.tsv.gz", 
                      ge_regressed_path: str = "./project_data/GEUVADIS_YRI_ge_regressed.tsv.gz",
-                     chr_num: int = 1):
+                     chr_num: int = 1, dwon_sample: bool = True, random_state: int = 42,
+                     num_genes: int = 300):
     ge_regressed = pd.read_csv(ge_regressed_path, sep="\t", index_col=0, compression="gzip")
     protein_genes = pd.read_csv(protein_gene_path, sep="\t", index_col=0, compression="gzip")
     protein_genes["chr"] = protein_genes.index
     protein_genes.reset_index(drop=True, inplace=True)
     protein_genes_chr = protein_genes[protein_genes["chr"] == chr_num]
     genes_chr = protein_genes_chr["gene_id"].tolist()
-    # Keep genes_chr columns in ge_regressed
+    # Downsample the genes
+    if dwon_sample:
+        random.seed(random_state)
+        genes_chr = random.sample(genes_chr, num_genes)
+
+    protein_genes_chr = protein_genes_chr[protein_genes_chr["gene_id"].isin(genes_chr)]
     ge_regressed_chr = ge_regressed[genes_chr]
+    
     return ge_regressed_chr, protein_genes_chr
     
 
