@@ -58,7 +58,7 @@ def process_gene(gene_id, protein_genes, ancsetry, y_full_df, test_size, bfile, 
         print("No snps for gene ", gene_id)
         return None
 
-def Marginal_all_genes(protein_genes, y_full_df, ancsetry, bfile, test_size=0.2, random_state=42, save_snps=True):
+def Marginal_all_genes(protein_genes, y_full_df, ancsetry, bfile=None, test_size=0.2, random_state=42, save_snps=True):
     results = {}
     snps_list = []
     gene_ids = protein_genes["gene_id"]

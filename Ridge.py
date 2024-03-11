@@ -21,28 +21,16 @@ def Ridge(X, Y, alpha=0.1, test_size=0.2, random_state=42):
         "r2_test": clf.score(X_test, Y_test)
     }
 
-def Ridge_all_genes(protein_genes, y_full_df, ancsetry, bfile, alpha=0.1, test_size=0.2, random_state=42, save_snps=True):
+def Ridge_all_genes(protein_genes, y_full_df, ancsetry, alpha=0.1, test_size=0.2, random_state=42):
     results = {}
-    snps_list = []
     for gene_id in tqdm(protein_genes["gene_id"]):
         try:
-            processed_geno, X, Y = process_one_gene(gene_id, protein_genes, ancsetry, y_full_df, bfile)
+            processed_geno, X, Y = process_one_gene(gene_id, protein_genes, ancsetry, y_full_df)
         except ValueError:
             print("No snps for gene ", gene_id)
             continue
         results[gene_id] = Ridge(X, Y, alpha=alpha, test_size=test_size, random_state=random_state)
-        snps = processed_geno["snp_info"]
-        snps["effect_weight"] = results[gene_id]["clf"].coef_
-        snps_list.append(snps)
-        if save_snps:
-            os.makedirs(f"./project_data/results/effect/{ancsetry}", exist_ok=True)
-            snps.to_csv(f"./project_data/results/effect/{ancsetry}/Ridge_{gene_id}_effect_weights.csv")
-    
-    train_r2 = np.mean([results[gene_id]["r2_train"] for gene_id in results])
-    test_r2 = np.mean([results[gene_id]["r2_test"] for gene_id in results])
-    print(f"Average train R^2: {train_r2}, Average test R^2: {test_r2}")
-    
-    return results, snps_list
+    return results
 
 
 if __name__ == "__main__":
@@ -52,11 +40,11 @@ if __name__ == "__main__":
         os.makedirs("./project_data/results")
 
     EUR_results = Ridge_all_genes(EUR_protein_genes, EUR_ge_regressed, "EUR")
-    with open("./project_data/results/ridge_results.pkl", "wb") as f:
+    with open("./project_data/results/ridge_results_EUR.pkl", "wb") as f:
         pickle.dump(EUR_results, f)
-    print("Results saved in ./project_data/results/ridge_results.pkl")
+    print("Results saved in ./project_data/results/ridge_results_EUR.pkl")
 
     YRI_results = Ridge_all_genes(YRI_protein_genes, YRI_ge_regressed, "YRI")
     with open("./project_data/results/ridge_results.pkl", "wb") as f:
         pickle.dump(YRI_results, f)
-    print("Results saved in ./project_data/results/ridge_results.pkl")
+    print("Results saved in ./project_data/results/ridge_results_YRI.pkl")

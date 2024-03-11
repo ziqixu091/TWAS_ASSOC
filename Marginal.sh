@@ -7,9 +7,9 @@
 #                                  #
 ####################################
 
-#SBATCH --job-name=RIDGE    # Job name
-#SBATCH --output=/new-stg/home/banghua/TWAS_ASSOC/RIDGE.%j.out # Stdout (%j expands to jobId)
-#SBATCH --error=/new-stg/home/banghua/TWAS_ASSOC/RIDGE.%j.err # Stderr (%j expands to jobId)
+#SBATCH --job-name=Marginal    # Job name
+#SBATCH --output=/new-stg/home/banghua/TWAS_ASSOC/Marginal.%j.out # Stdout (%j expands to jobId)
+#SBATCH --error=/new-stg/home/banghua/TWAS_ASSOC/Marginal.%j.err # Stderr (%j expands to jobId)
 #SBATCH --ntasks=32     # Number of tasks(processes)
 #SBATCH --nodes=1     # Number of nodes requested
 #SBATCH --mem=256G   # memory per NODE
