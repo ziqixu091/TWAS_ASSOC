@@ -33,8 +33,11 @@ def Marginal(X, Y, beta=False, test_size=0.2, random_state=42):
     X_std = StandardScaler().fit_transform(X)
     X_train, X_test, Y_train, Y_test = train_test_split(X_std, Y, test_size=test_size, random_state=random_state)
     eff_wgt = weights_marginal(X_train, Y_train, beta)
+    eff_wgt_squared = eff_wgt ** 2
+    max_idx = np.argmax(eff_wgt_squared)
     # Keep only the one with the highest squared effect weight and set the rest to 0
-    eff_wgt_filtered = np.where(eff_wgt == np.max(eff_wgt), eff_wgt, 0)
+    eff_wgt_filtered = np.zeros_like(eff_wgt)
+    eff_wgt_filtered[max_idx] = eff_wgt[max_idx]
     return {
         "eff_wgt": eff_wgt,
         "eff_wgt_filtered": eff_wgt_filtered,

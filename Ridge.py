@@ -48,3 +48,4 @@ if __name__ == "__main__":
     with open("./project_data/results/ridge_results.pkl", "wb") as f:
         pickle.dump(YRI_results, f)
     print("Results saved in ./project_data/results/ridge_results_YRI.pkl")
+    
